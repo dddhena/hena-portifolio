@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "heniduge-portfolio-2025"
-  }
+  },
+  "targets": {
+    "heniduge-portfolio-2025": {
+      "hosting": {
+        "main": [
+          "heniduge-portfolio-2025"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
