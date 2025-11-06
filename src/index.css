@@ -593,3 +593,34 @@ html {
   opacity: 0.1;
   z-index: 0;
 }
+@keyframes float-particle {
+  0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+  25% { transform: translateY(-40px) translateX(20px) rotate(90deg); }
+  50% { transform: translateY(20px) translateX(-30px) rotate(180deg); }
+  75% { transform: translateY(-30px) translateX(25px) rotate(270deg); }
+}
+
+.floating-particle {
+  animation: float-particle 15s ease-in-out infinite;
+}
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.bg-grid-pattern {
+  background-image: 
+    linear-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.about-bg-pattern {
+  background: linear-gradient(135deg, 
+    rgba(59, 130, 246, 0.05) 0%, 
+    rgba(139, 92, 246, 0.05) 50%, 
+    rgba(6, 182, 212, 0.05) 100%);
+}
