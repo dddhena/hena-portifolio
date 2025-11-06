@@ -1,15 +1,11 @@
 import { FaCode, FaHeart, FaRocket, FaLightbulb, FaStar, FaSeedling, FaPalette, FaBrain } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Variants } from "framer-motion"; // Type-only import
+import type { Variants } from "framer-motion";
 import { useState, useEffect } from "react";
 
 export default function About() {
   const [activeSection, setActiveSection] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+  // Removed unused isVisible state
 
   const aboutSections = [
     {
@@ -100,12 +96,47 @@ export default function About() {
       className="relative py-20 px-6 bg-white text-gray-900 dark:bg-gray-900 dark:text-white overflow-hidden min-h-screen"
     >
       {/* Advanced Animated Background */}
-      <div className="absolute inset-0 about-bg-pattern"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50/20 via-purple-50/20 to-cyan-50/20 dark:from-blue-900/10 dark:via-purple-900/10 dark:to-cyan-900/10"></div>
       
       {/* Animated Gradient Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl animate-float-gentle"></div>
-      <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-gradient-to-r from-cyan-500/15 to-emerald-500/15 rounded-full blur-3xl animate-float-gentle" style={{ animationDelay: '2s' }}></div>
-      <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-full blur-2xl animate-pulse-glow"></div>
+      <motion.div
+        className="absolute top-1/4 left-1/4 w-80 h-80 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-3xl"
+        animate={{
+          y: [0, -30, 0],
+          scale: [1, 1.1, 1],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-gradient-to-r from-cyan-500/15 to-emerald-500/15 rounded-full blur-3xl"
+        animate={{
+          y: [0, 20, 0],
+          scale: [1, 1.2, 1],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 2
+        }}
+      />
+      <motion.div
+        className="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-r from-pink-500/10 to-rose-500/10 rounded-full blur-2xl"
+        animate={{
+          scale: [1, 1.3, 1],
+          opacity: [0.3, 0.6, 0.3],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1
+        }}
+      />
 
       {/* Floating Interactive Icons */}
       {floatingIcons.map((item, index) => (
@@ -126,30 +157,6 @@ export default function About() {
           {item.icon}
         </motion.div>
       ))}
-
-      {/* Animated Connection Network */}
-      <div className="absolute inset-0 opacity-20">
-        <svg className="w-full h-full">
-          <defs>
-            <linearGradient id="networkGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#3b82f6" />
-              <stop offset="50%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#06b6d4" />
-            </linearGradient>
-          </defs>
-          {[1, 2, 3, 4].map((i) => (
-            <path
-              key={i}
-              d={`M${i * 100},50 Q${i * 150},${i * 20} ${i * 200},${100 - i * 20}`}
-              stroke="url(#networkGradient)"
-              strokeWidth="1"
-              fill="none"
-              className="animate-path-move"
-              style={{ animationDelay: `${i * 0.5}s` }}
-            />
-          ))}
-        </svg>
-      </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
         {/* Enhanced Animated Header */}
@@ -250,9 +257,6 @@ export default function About() {
                   'border-yellow-200/50 dark:border-yellow-700/50'
                 }`}
               >
-                {/* Animated Background Pattern */}
-                <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-                
                 {/* Section Header */}
                 <div className="flex items-center gap-6 mb-8 relative z-10">
                   <motion.div
