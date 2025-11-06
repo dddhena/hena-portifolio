@@ -1,11 +1,10 @@
 import { FaCode, FaHeart, FaRocket, FaLightbulb, FaStar, FaSeedling, FaPalette, FaBrain } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState } from "react"; // Removed useEffect import
 
 export default function About() {
   const [activeSection, setActiveSection] = useState(0);
-  // Removed unused isVisible state
 
   const aboutSections = [
     {
