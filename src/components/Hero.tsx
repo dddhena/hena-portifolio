@@ -177,14 +177,20 @@ const FallingStar = ({ size, left, delay, duration, variant = 'straight' }: Fall
 export default function Hero() {
   const [graphicsReady, setGraphicsReady] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Listen for theme changes
+  // Check if mobile on mount and resize
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
     const checkTheme = () => {
       const isDark = document.documentElement.classList.contains('dark');
       setIsDarkMode(isDark);
     };
 
+    checkMobile();
     checkTheme();
 
     const observer = new MutationObserver((mutations) => {
@@ -204,11 +210,17 @@ export default function Hero() {
       checkTheme();
     };
 
+    const handleResize = () => {
+      checkMobile();
+    };
+
     window.addEventListener('themeChange', handleThemeChange);
+    window.addEventListener('resize', handleResize);
 
     return () => {
       observer.disconnect();
       window.removeEventListener('themeChange', handleThemeChange);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
@@ -239,24 +251,35 @@ export default function Hero() {
     return isDarkMode ? "wave-bg-dark" : "wave-bg-light";
   };
 
+  // Calculate number of stars based on device
+  const getStarCount = (desktopCount: number, mobileCount: number) => {
+    return isMobile ? mobileCount : desktopCount;
+  };
+
   return (
     <section
       id="home"
       className={`relative flex flex-col justify-center items-center min-h-screen px-4 sm:px-6 text-center overflow-hidden ${getBackgroundClass()} ${
         isDarkMode ? "text-white" : "text-gray-900"
       } ${graphicsReady ? "" : "opacity-0"} transition-colors duration-500`}
-      style={{ paddingTop: '80px' }}
+      style={{ 
+        paddingTop: '80px',
+        width: '100vw',
+        position: 'relative',
+        left: 0,
+        right: 0
+      }}
     >
       {/* Enhanced Wave Background Layers with Gold Tint */}
       <div className="wave-layer-1" />
       <div className="wave-layer-2" />
       <div className="wave-layer-3" />
 
-      {/* Enhanced Floating Particles with Gold */}
-      {Array.from({ length: 30 }, (_, i) => (
+      {/* Enhanced Floating Particles with Gold - Reduced on mobile */}
+      {Array.from({ length: getStarCount(30, 15) }, (_, i) => (
         <WaveParticle
           key={`particle-${i}`}
-          size={Math.random() * 150 + 40}
+          size={Math.random() * (isMobile ? 80 : 150) + (isMobile ? 20 : 40)}
           left={Math.random() * 100}
           top={Math.random() * 100}
           delay={Math.random() * 30}
@@ -265,25 +288,32 @@ export default function Hero() {
         />
       ))}
 
-      {/* Enhanced Stars Container - NOW SHOWS IN BOTH DARK AND LIGHT MODES */}
-      <div className="stars-container">
-        {/* Enhanced Orbiting Stars - Gold */}
-        {Array.from({ length: 20 }, (_, i) => (
+      {/* Enhanced Stars Container - Mobile Optimized */}
+      <div 
+        className="stars-container"
+        style={{
+          width: '100vw',
+          left: 0,
+          right: 0
+        }}
+      >
+        {/* Enhanced Orbiting Stars - Gold - Reduced on mobile */}
+        {Array.from({ length: getStarCount(20, 8) }, (_, i) => (
           <OrbitingStar
             key={`orbit-${i}`}
-            size={Math.random() * 6 + 2}
+            size={Math.random() * (isMobile ? 4 : 6) + (isMobile ? 1 : 2)}
             delay={Math.random() * 5}
-            duration={20 + Math.random() * 20}
-            reverse={i >= 10}
+            duration={(isMobile ? 30 : 20) + Math.random() * 20}
+            reverse={i >= (isMobile ? 4 : 10)}
             twinkle={i % 4 === 0}
           />
         ))}
         
-        {/* Enhanced Floating Background Stars - Gold */}
-        {Array.from({ length: 100 }, (_, i) => (
+        {/* Enhanced Floating Background Stars - Gold - Reduced on mobile */}
+        {Array.from({ length: getStarCount(100, 40) }, (_, i) => (
           <FloatingStar
             key={`float-${i}`}
-            size={Math.random() * 4 + 1}
+            size={Math.random() * (isMobile ? 3 : 4) + 1}
             left={Math.random() * 100}
             top={Math.random() * 100}
             delay={Math.random() * 10}
@@ -292,8 +322,8 @@ export default function Hero() {
           />
         ))}
         
-        {/* Enhanced Shooting Stars - Gold */}
-        {Array.from({ length: 12 }, (_, i) => (
+        {/* Enhanced Shooting Stars - Gold - Reduced on mobile */}
+        {Array.from({ length: getStarCount(12, 6) }, (_, i) => (
           <ShootingStar
             key={`shoot-${i}`}
             delay={Math.random() * 20}
@@ -302,8 +332,8 @@ export default function Hero() {
           />
         ))}
         
-        {/* Enhanced Streaming Stars - Gold, Full Page Coverage */}
-        {Array.from({ length: 35 }, (_, i) => (
+        {/* Enhanced Streaming Stars - Gold, Full Page Coverage - Reduced on mobile */}
+        {Array.from({ length: getStarCount(35, 15) }, (_, i) => (
           <StreamingStar
             key={`stream-${i}`}
             content="★"
@@ -312,12 +342,12 @@ export default function Hero() {
             delay={Math.random() * 15}
             duration={6 + Math.random() * 8}
             opacity={Math.random() * 0.9 + 0.2}
-            fontSize={Math.random() * 20 + 15}
+            fontSize={Math.random() * (isMobile ? 15 : 20) + (isMobile ? 10 : 15)}
           />
         ))}
         
-        {/* Enhanced Streaming Stars - Reverse, Full Page Coverage */}
-        {Array.from({ length: 30 }, (_, i) => (
+        {/* Enhanced Streaming Stars - Reverse, Full Page Coverage - Reduced on mobile */}
+        {Array.from({ length: getStarCount(30, 12) }, (_, i) => (
           <StreamingStar
             key={`stream-rev-${i}`}
             content="★"
@@ -326,13 +356,13 @@ export default function Hero() {
             delay={Math.random() * 18}
             duration={8 + Math.random() * 7}
             opacity={Math.random() * 0.8 + 0.3}
-            fontSize={Math.random() * 18 + 12}
+            fontSize={Math.random() * (isMobile ? 14 : 18) + (isMobile ? 8 : 12)}
             reverse={true}
           />
         ))}
         
-        {/* Enhanced Special Glowing Stars */}
-        {Array.from({ length: 15 }, (_, i) => (
+        {/* Enhanced Special Glowing Stars - Reduced on mobile */}
+        {Array.from({ length: getStarCount(15, 6) }, (_, i) => (
           <StreamingStar
             key={`glow-${i}`}
             content="⭐"
@@ -341,15 +371,15 @@ export default function Hero() {
             delay={Math.random() * 25}
             duration={10 + Math.random() * 10}
             opacity={Math.random() * 0.7 + 0.4}
-            fontSize={Math.random() * 25 + 20}
+            fontSize={Math.random() * (isMobile ? 20 : 25) + (isMobile ? 15 : 20)}
           />
         ))}
 
-        {/* Enhanced Falling Stars - Full Page Coverage */}
-        {Array.from({ length: 25 }, (_, i) => (
+        {/* Enhanced Falling Stars - Full Page Coverage - Reduced on mobile */}
+        {Array.from({ length: getStarCount(25, 10) }, (_, i) => (
           <FallingStar
             key={`falling-${i}`}
-            size={Math.random() * 3 + 1.5}
+            size={Math.random() * (isMobile ? 2 : 3) + (isMobile ? 1 : 1.5)}
             left={Math.random() * 100}
             delay={Math.random() * 15}
             duration={6 + Math.random() * 6}
@@ -357,8 +387,8 @@ export default function Hero() {
           />
         ))}
 
-        {/* Additional enhanced falling stars */}
-        {Array.from({ length: 20 }, (_, i) => (
+        {/* Additional enhanced falling stars - Reduced on mobile */}
+        {!isMobile && Array.from({ length: 20 }, (_, i) => (
           <FallingStar
             key={`falling-wide-${i}`}
             size={Math.random() * 2 + 1}
@@ -371,22 +401,22 @@ export default function Hero() {
       </div>
 
       {/* Enhanced Central Glow Effect */}
-      <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-4xl ${
-        isDarkMode ? "bg-yellow-500/20" : "bg-yellow-300/30"
-      }`} />
+      <div className={`absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 ${
+        isMobile ? "w-64 h-64 blur-3xl" : "w-96 h-96 blur-4xl"
+      } ${isDarkMode ? "bg-yellow-500/20" : "bg-yellow-300/30"}`} />
 
       {/* Enhanced Additional Glow Effects - Now shows in both modes */}
       <>
-        <div className={`absolute bottom-0 left-0 w-96 h-96 rounded-full blur-3xl animate-pulse ${
-          isDarkMode ? "bg-orange-500/10" : "bg-orange-300/15"
-        }`} />
-        <div className={`absolute top-0 right-0 w-96 h-96 rounded-full blur-3xl animate-pulse ${
-          isDarkMode ? "bg-amber-500/10" : "bg-amber-300/15"
-        }`} style={{ animationDelay: '3s' }} />
+        <div className={`absolute bottom-0 left-0 ${
+          isMobile ? "w-64 h-64 blur-2xl" : "w-96 h-96 blur-3xl"
+        } animate-pulse ${isDarkMode ? "bg-orange-500/10" : "bg-orange-300/15"}`} />
+        <div className={`absolute top-0 right-0 ${
+          isMobile ? "w-64 h-64 blur-2xl" : "w-96 h-96 blur-3xl"
+        } animate-pulse ${isDarkMode ? "bg-amber-500/10" : "bg-amber-300/15"}`} style={{ animationDelay: '3s' }} />
       </>
 
-      {/* Enhanced Light mode accent shapes */}
-      {!isDarkMode && (
+      {/* Enhanced Light mode accent shapes - Reduced on mobile */}
+      {!isDarkMode && !isMobile && (
         <>
           <div className="absolute top-[-200px] left-[-200px] w-[500px] h-[500px] opacity-40 animate-spin-slow blur-3xl bg-yellow-200/50 rounded-full" />
           <div className="absolute bottom-[-150px] right-[-150px] w-[450px] h-[450px] opacity-35 animate-float blur-2xl bg-amber-200/40 rounded-full" />
@@ -408,7 +438,9 @@ export default function Hero() {
           <img
             src="/images/Heni.JPG"
             alt="Henok Duga"
-            className={`hero-photo relative w-32 h-32 sm:w-40 sm:h-40 rounded-full object-cover border-4 backdrop-blur-sm z-10 ${
+            className={`hero-photo relative ${
+              isMobile ? "w-28 h-28" : "w-32 h-32 sm:w-40 sm:h-40"
+            } rounded-full object-cover border-4 backdrop-blur-sm z-10 ${
               isDarkMode 
                 ? "shadow-[0_0_80px_rgba(255,215,0,0.6)] border-yellow-400/80"
                 : "shadow-[0_0_60px_rgba(255,193,7,0.5)] border-yellow-500/70"
@@ -416,16 +448,20 @@ export default function Hero() {
           />
 
           {/* Enhanced Floating elements */}
-          <div className={`absolute -top-3 -left-3 sm:-top-4 sm:-left-4 w-5 h-5 sm:w-6 sm:h-6 rounded-full blur-sm animate-bounce ${
+          <div className={`absolute -top-3 -left-3 sm:-top-4 sm:-left-4 ${
+            isMobile ? "w-4 h-4" : "w-5 h-5 sm:w-6 sm:h-6"
+          } rounded-full blur-sm animate-bounce ${
             isDarkMode ? "bg-yellow-400/90" : "bg-yellow-500/80"
           }`} />
-          <div className={`absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 w-4 h-4 sm:w-5 sm:h-5 rounded-full blur-sm animate-bounce ${
+          <div className={`absolute -bottom-3 -right-3 sm:-bottom-4 sm:-right-4 ${
+            isMobile ? "w-3 h-3" : "w-4 h-4 sm:w-5 sm:h-5"
+          } rounded-full blur-sm animate-bounce ${
             isDarkMode ? "bg-amber-400/90" : "bg-amber-500/80"
           }`} style={{ animationDelay: '0.5s' }} />
         </div>
 
         {/* Enhanced Text Content */}
-        <h1 className="hero-heading text-4xl sm:text-5xl md:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight tracking-wide px-4">
+        <h1 className="hero-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold mb-4 sm:mb-6 leading-tight tracking-wide px-4">
           <span className={`bg-gradient-to-r bg-clip-text text-transparent ${
             isDarkMode 
               ? "from-yellow-400 via-amber-400 to-orange-400"
@@ -443,7 +479,7 @@ export default function Hero() {
           </span>
         </h1>
 
-        <p className={`hero-description text-base sm:text-lg md:text-xl mb-6 sm:mb-8 max-w-2xl tracking-normal px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border backdrop-blur-md ${
+        <p className={`hero-description text-sm sm:text-base md:text-lg lg:text-xl mb-6 sm:mb-8 max-w-2xl tracking-normal px-4 sm:px-6 py-3 sm:py-4 rounded-2xl border backdrop-blur-md ${
           isDarkMode 
             ? "text-white bg-black/50 border-yellow-400/30"
             : "text-gray-800 bg-white/95 border-yellow-500/40"
@@ -455,7 +491,7 @@ export default function Hero() {
         <div className="hero-buttons flex flex-wrap justify-center gap-3 sm:gap-4">
           <a
             href="#projects"
-            className={`backdrop-blur-lg px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-medium hover:scale-105 transition-all duration-300 border shadow-xl ${
+            className={`backdrop-blur-lg px-5 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-xl font-medium hover:scale-105 transition-all duration-300 border shadow-xl touch-manipulation ${
               isDarkMode 
                 ? "bg-yellow-500/20 text-yellow-100 border-yellow-400/50 hover:bg-yellow-500/30 hover:border-yellow-400/70"
                 : "bg-yellow-500/10 text-yellow-900 border-yellow-500/60 hover:bg-yellow-500/20 hover:border-yellow-600"
@@ -465,7 +501,7 @@ export default function Hero() {
           </a>
           <a
             href="#about"
-            className={`px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-medium hover:scale-105 transition-all duration-300 shadow-xl ${
+            className={`px-5 sm:px-6 md:px-8 py-2 sm:py-3 md:py-4 rounded-xl font-medium hover:scale-105 transition-all duration-300 shadow-xl touch-manipulation ${
               isDarkMode 
                 ? "bg-gradient-to-r from-yellow-500 to-amber-500 text-white hover:from-yellow-600 hover:to-amber-600"
                 : "bg-gradient-to-r from-yellow-500 to-amber-500 text-white hover:from-yellow-600 hover:to-amber-600"
@@ -476,7 +512,7 @@ export default function Hero() {
         </div>
 
         {/* Enhanced Scroll Indicator */}
-        <div className={`hero-scroll mt-8 sm:mt-12 animate-bounce text-sm px-4 py-2 rounded-full border backdrop-blur-md ${
+        <div className={`hero-scroll mt-6 sm:mt-8 md:mt-12 animate-bounce text-xs sm:text-sm px-3 sm:px-4 py-1 sm:py-2 rounded-full border backdrop-blur-md ${
           isDarkMode 
             ? "text-yellow-200 bg-black/50 border-yellow-400/40"
             : "text-yellow-800 bg-white/90 border-yellow-500/50"

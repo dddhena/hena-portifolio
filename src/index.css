@@ -2,10 +2,79 @@
 @tailwind components;
 @tailwind utilities;
 
-html {
-  scroll-padding-top: 80px;
-  scroll-behavior: smooth;
+/* Prevent horizontal scroll and ensure proper mobile behavior */
+html, body {
+  max-width: 100%;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* Ensure all sections don't cause horizontal overflow */
+section {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+  html, body {
+    width: 100%;
+    position: relative;
+    overflow-x: hidden;
+  }
+  
+  /* Prevent any element from causing horizontal scroll */
+  * {
+    max-width: 100%;
+  }
+  
+  /* Specifically target the hero section for mobile */
+  #home {
+    width: 100vw;
+    position: relative;
+    left: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Ensure stars container doesn't overflow */
+  .stars-container {
+    width: 100vw;
+    left: 0;
+    right: 0;
+  }
+  
+  /* Fix for any potential overflow in content */
+  .content-container {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-sizing: border-box;
+  }
+  
+  /* Reduce animation intensity further for mobile */
+  .stars-container {
+    transform: scale(0.7);
+  }
+  
+  /* Hide some stars on very small screens to improve performance */
+  @media (max-width: 480px) {
+    .stars-container .star:nth-child(n+50),
+    .stars-container .streaming-star:nth-child(n+20),
+    .stars-container .falling-star:nth-child(n+15) {
+      display: none;
+    }
+  }
+}
+
+/* High-motion preference support - keep this */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Mobile-first responsive design */
